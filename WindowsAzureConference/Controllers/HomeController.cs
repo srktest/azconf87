@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Mvc;
 
 namespace WindowsAzureConference.Controllers
@@ -47,6 +48,24 @@ namespace WindowsAzureConference.Controllers
             }
 
             
+
+            return View();
+        }
+
+        public ActionResult LeakMemory()
+        {
+            var list = new List<byte[]>();
+            for (int i = 0; i < 20000; i++)            
+            {
+                byte[] someBytes = new byte[10240];
+                byte[] someBytes2 = new byte[10240];
+                list.Add(someBytes); // Change the size here.               
+                list.Add(someBytes2); // Change the size here.               
+            }
+
+            System.Web.HttpContext.Current.Cache.Insert("myList", list);
+
+
 
             return View();
         }
